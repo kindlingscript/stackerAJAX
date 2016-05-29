@@ -31,6 +31,27 @@ var showQuestion = function(question) {
 	return result;
 };
 
+var showAnswerers = function(answerer) {
+
+	// clone result template for answerers
+	var result = $('.templates .answerers').clone();
+
+	var answererElem = result.find('.answerer-name a');
+	answererElem.attr('href', answerer.user.link);
+	answererElem.text(answerer.user.display_name);
+
+	var posts = result.find('.post-count');
+	posts.text(answerer.post_count);
+
+	var reputation = result.find('.reputation');
+	reputation.text(answerer.user.reputation);
+
+	var score = result.find('.score');
+	score.text(answerer.score);
+
+	return result;
+};
+
 
 // this function takes the results object from StackOverflow
 // and returns the number of results and tags to be appended to DOM
@@ -64,13 +85,14 @@ var getUnanswered = function(tags) {
 		dataType: "jsonp",//use jsonp to avoid cross origin issues
 		type: "GET",
 	})
-	.done(function(result){ //this waits for the ajax to return with a succesful promise object
+	.done(function(result){ //this waits for the ajax to return with a successful promise object
 		var searchResults = showSearchResults(request.tagged, result.items.length);
-
+		console.log(searchResults);
 		$('.search-results').html(searchResults);
 		//$.each is a higher order function. It takes an array and a function as an argument.
 		//The function is executed once for each item in the array.
 		$.each(result.items, function(i, item) {
+			console.log(item);
 			var question = showQuestion(item);
 			$('.results').append(question);
 		});
@@ -81,6 +103,35 @@ var getUnanswered = function(tags) {
 	});
 };
 
+var getTopAnswerers = function(answerer) {
+	var request = {
+		tag: answerer,
+		site: 'stackoverflow',
+		period: 'all_time',
+	};
+
+	$.ajax({
+		url: "http://api.stackexchange.com/2.2/tags/" + request.tag + "/top-answerers/" + request.period,
+		data: request,
+		dataType: "jsonp",
+		type: "GET",
+	})
+	.done(function(result) {
+		var answererResults = showSearchResults(request.tag, result.items.length);
+		console.log(answererResults);
+		$('.search-results').html(answererResults);
+
+		$.each(result.items, function(i, item) {
+			console.log(item);
+			var answerer = showAnswerers(item);
+			$('.results').append(answerer);
+		});
+	})
+	.fail(function(jqXHR, error) {
+		var errorElem = showError(error);
+		$('.search-results').append(errorElem);
+	});
+};
 
 $(document).ready( function() {
 	$('.unanswered-getter').submit( function(e){
@@ -91,4 +142,11 @@ $(document).ready( function() {
 		var tags = $(this).find("input[name='tags']").val();
 		getUnanswered(tags);
 	});
+
+	$('.inspiration-getter').submit(function(e) {
+		e.preventDefault();
+		$('.results').html('');
+		var answerers = $(this).find("input[name='answerers']").val();
+		getTopAnswerers(answerers);
+	})
 });
