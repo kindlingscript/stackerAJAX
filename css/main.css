@@ -31,6 +31,30 @@
 	clear: both;
 }
 
+.insp {
+	margin-top: 30px;
+}
+
+.result.question {
+	padding-left: 25px;
+  padding-top: 15px;
+}
+
+.submit {
+  background-color: #444444;
+  color: white;
+  border: none;
+  padding: 5px 13px;
+}
+
+.search-box {
+	padding: 3px;
+}
+
+.search-results {
+	margin: 20px 0;
+}
+
 .inspiration { 
 	margin-left: 3em;
 }
@@ -44,6 +68,17 @@
 
 dt {
 	font-weight: 900;
+}
+
+a {
+	text-decoration: none;
+  color: #F67A00;
+}
+
+a:hover {
+	text-decoration: underline;
+	cursor: pointer;
+	color: #715132;
 }
 
 .group {
