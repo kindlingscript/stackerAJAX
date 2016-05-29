@@ -37,8 +37,25 @@
 
 .result {
 	border: 1px solid black;
+	border-radius: 3px;
 	padding: 5px;
 	margin: 0 auto 1em auto;
+}
+
+dt {
+	font-weight: 900;
+}
+
+.group {
+	padding: 5px 0 10px 20px;
+}
+
+.group:first-child {
+	padding-top: 20px;
+}
+
+.group:last-child {
+	padding-bottom: 20px;
 }
 
 .error {
